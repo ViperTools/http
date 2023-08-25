@@ -1,3 +1,4 @@
 smake
 libhttp.a
 dependencies
+.DS_Store
