@@ -63,6 +63,7 @@ http_response http::send(http_request req) {
     // Basic options
     curl_easy_setopt(handle, CURLOPT_URL, req.url.c_str());
     curl_easy_setopt(handle, CURLOPT_CUSTOMREQUEST, httpMethodNames[req.method].c_str());
+    curl_easy_setopt(http::handle, CURLOPT_FOLLOWLOCATION, true);
 
     // Set headers
     curl_slist* headers = NULL;
