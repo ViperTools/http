@@ -59,6 +59,10 @@ size_t http::header_callback(char* buffer, size_t size, size_t nitems, void* use
     return rsize;
 }
 
+size_t http::download_write_callback(void *ptr, size_t size, size_t nmemb, void* userdata) {
+    return fwrite(ptr, size, nmemb, (FILE*)userdata);
+}
+
 http_response http::send(http_request req) {
     // Basic options
     curl_easy_setopt(handle, CURLOPT_URL, req.url.c_str());
@@ -98,4 +102,25 @@ http_response http::send(http_request req) {
     curl_easy_reset(handle);
 
     return res;
+}
+
+void http::download(const char* url, const char* path) {
+    // Basic options
+    curl_easy_setopt(handle, CURLOPT_URL, url);
+    curl_easy_setopt(handle, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_easy_setopt(http::handle, CURLOPT_FOLLOWLOCATION, true);
+
+    // Setup response body
+    FILE* file = fopen(path, "wb");
+
+    if (file) {
+        http_response res;
+        curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, download_write_callback);
+        curl_easy_setopt(handle, CURLOPT_WRITEDATA, file);
+        curl_easy_perform(handle);
+        fclose(file);
+    }
+    
+
+    curl_easy_reset(handle);
 }
