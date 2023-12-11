@@ -7,10 +7,11 @@ using std::map;
 
 class http_response {
 public:
-    CURLcode code;
-    
+    CURLcode curlCode;
+
     char* body_memory;
     size_t body_size = 0;
+    int statusCode;
     map<string, string> headers;
 
     string str();

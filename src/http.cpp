@@ -92,7 +92,8 @@ http_response http::send(http_request req) {
     // curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, header_callback);
     // curl_easy_setopt(handle, CURLOPT_HEADERDATA, &res);
 
-    res.code = curl_easy_perform(handle);
+    res.curlCode = curl_easy_perform(handle);
+    curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &res.statusCode);
 
     // Cleanup
     if (headers != NULL) {
